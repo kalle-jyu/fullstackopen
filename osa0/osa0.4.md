@@ -25,7 +25,7 @@ sequenceDiagram
     server-->>browser: Status 200 JavaScript-tiedosto
     deactivate server
     
-    Note right of browser: The browser starts executing the JavaScript code that fetches the JSON from the server
+    Note right of browser: Selain suorittaa JavaScript-koodin, joka noutaa datan palvelimelta
     
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
     activate server
