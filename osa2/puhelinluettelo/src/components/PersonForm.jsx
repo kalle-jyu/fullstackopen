@@ -1,5 +1,4 @@
 const PersonForm = (props) => {
-  console.log(props)
     return (
       <form onSubmit={props.addFunction}>
         <div>
