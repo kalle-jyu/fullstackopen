@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
 import phonebookService from './services/phonebook'
+
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -12,6 +14,10 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
 
   const [filter, setFilter] = useState('')
+
+  const [errorMessage, setErrorMessage] = useState(null)
+
+  const [successMessage, setSuccessMessage] = useState(null)
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -32,6 +38,10 @@ const App = () => {
             setPersons(persons.map(person => person.id !== changedPerson.id ? person : response.data))
             setNewName('')
             setNewNumber('')
+            setSuccessMessage(`Updated '${person.name}'`)
+            setTimeout(() => {
+              setSuccessMessage(null)
+            }, 5000)
           }
           )
       }
@@ -46,7 +56,12 @@ const App = () => {
           setPersons(persons.concat(response.data))
           setNewName('')
           setNewNumber('')
+          setSuccessMessage(`Added '${response.data.name}'`)
+          setTimeout(() => {
+            setSuccessMessage(null)
+          }, 5000)
         })
+
     }
   }
 
@@ -72,16 +87,21 @@ const App = () => {
   const deleteEntry = (id) => {
     const person = persons.find(p => p.id === id)
     phonebookService.remove(id)
-    .then(response => setPersons(persons.filter(person => person.id !== id)))
-    .catch(error => {
-      alert(`Entry '${person.name}' was already deleted from server`)
-      setPersons(persons.filter(person => person.id !== id))
-    })
+      .then(response => setPersons(persons.filter(person => person.id !== id)))
+      .catch(error => {
+        setErrorMessage(`Entry ${person.name} was already deleted from server`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+        setPersons(persons.filter(p => p.id !== id))
+      })
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} success={false} />
+      <Notification message={successMessage} success={true} />
       <Filter filter={filter} handler={handleFilterChange} />
       <PersonForm
         addFunction={addPerson}
