@@ -159,7 +159,7 @@ describe('Blog tests', () => {
   })
 })
 
-test.only('valid changes are updated ', async () => {
+test('valid changes are updated ', async () => {
   const blogsAtStart = await helper.blogsInDb()
   const blogToUpdate = blogsAtStart[0]
 
@@ -186,7 +186,7 @@ test.only('valid changes are updated ', async () => {
 
 })
 
-test.only('blog without title is not updated', async () => {
+test('blog without title is not updated', async () => {
   const blogsAtStart = await helper.blogsInDb()
   const blogToUpdate = blogsAtStart[1]
   const updatedBlog = {
@@ -210,7 +210,7 @@ test.only('blog without title is not updated', async () => {
   assert.strictEqual(blogsAtEnd[1].likes, blogToUpdate.likes)
 })
 
-test.only('blog without url is not updated', async () => {
+test('blog without url is not updated', async () => {
   const blogsAtStart = await helper.blogsInDb()
   const blogToUpdate = blogsAtStart[1]
   const updatedBlog = {
