@@ -82,6 +82,7 @@ describe('Blog tests', () => {
     }
     await api
       .post('/api/blogs')
+      .set("Authorization", `Bearer ${token}`)
       .send(newBlog)
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
@@ -117,6 +118,8 @@ describe('Blog tests', () => {
   })
 
   test('a valid blog can be added ', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+
     const newBlog = {
       title: "First class tests",
       author: "Robert C. Martin",
@@ -131,9 +134,9 @@ describe('Blog tests', () => {
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
-    const response = helper.blogsInDb()
-    assert.strictEqual(response.body.length, helper.initialBlogs.length + 1)
-    const title = response.body.map(r => r.title)
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, blogsAtStart.length + 1)
+    const title = blogsAtEnd.map(r => r.title)
     assert(title.includes('First class tests'))
 
   })
