@@ -94,7 +94,7 @@ describe('Blog tests', () => {
     assert(likes, 0)
   })
 
-  test.only('there are two blogs', async () => {
+  test('there are two blogs', async () => {
     const response = await api
       .get('/api/blogs')
       .set('Content-Type', 'application/json')
@@ -104,7 +104,7 @@ describe('Blog tests', () => {
     assert.strictEqual(response.body.length, initialBlogs.length)
   })
 
-  test.only('the first blog is titled React patterns', async () => {
+  test('the first blog is titled React patterns', async () => {
     const response = await api
       .get('/api/blogs')
       .set('Content-Type', 'application/json')
@@ -138,7 +138,7 @@ describe('Blog tests', () => {
 
   })
 
-  test.only('blog without title is not added', async () => {
+  test('blog without title is not added', async () => {
     const newBlog = {
       author: "Robert C. Martin",
       url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.html",
@@ -158,7 +158,7 @@ describe('Blog tests', () => {
     assert.strictEqual(response.body.length, initialBlogs.length)
   })
 
-  test.only('blog without url is not added', async () => {
+  test('blog without url is not added', async () => {
     const newBlog = {
       title: "First class tests",
       author: "Robert C. Martin",
@@ -178,7 +178,7 @@ describe('Blog tests', () => {
     assert.strictEqual(response.body.length, initialBlogs.length)
   })
 
-  test.only('a specific blog can be viewed', async () => {
+  test('a specific blog can be viewed', async () => {
     const response = await api.get('/api/blogs')
     const blogsAtStart = response.body
     const blogToView = blogsAtStart[0]
@@ -191,7 +191,7 @@ describe('Blog tests', () => {
     assert.deepStrictEqual(resultBlog.body, blogToView)
   })
 
-  test.only('delete a blog when authorized', async () => {
+  test('delete a blog when authorized', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
     // Send DELETE request with Authorization header
@@ -207,7 +207,7 @@ describe('Blog tests', () => {
     assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1)
   });
 
-  test.only('return 400 if no token is provided', async () => {
+  test('return 400 if no token is provided', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
     // Send DELETE request with Authorization header
@@ -218,7 +218,7 @@ describe('Blog tests', () => {
       .expect(400)
   });
 
-  test.only('valid changes are updated ', async () => {
+  test('valid changes are updated ', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToUpdate = blogsAtStart[0]
 
@@ -246,7 +246,7 @@ describe('Blog tests', () => {
 
   })
 
-  test.only('blog without title is not updated', async () => {
+  test('blog without title is not updated', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToUpdate = blogsAtStart[1]
     const updatedBlog = {
@@ -271,7 +271,7 @@ describe('Blog tests', () => {
     assert.strictEqual(blogsAtEnd[1].likes, blogToUpdate.likes)
   })
 
-  test.only('blog without url is not updated', async () => {
+  test('blog without url is not updated', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToUpdate = blogsAtStart[1]
     const updatedBlog = {
