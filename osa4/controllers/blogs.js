@@ -17,12 +17,14 @@ blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) =
 
 blogsRouter.get('/:id', async (request, response) => {
   const blog = await Blog.findById(request.params.id)
+    .populate('user', { id: 1, username: 1, name: 1 })
   response.status(200).json(blog)
 })
 
 
 blogsRouter.get('/', async (_request, response) => {
   const blogs = await Blog.find({})
+    .populate('user', { id: 1, username: 1, name: 1 })
   response.json(blogs)
 })
 
