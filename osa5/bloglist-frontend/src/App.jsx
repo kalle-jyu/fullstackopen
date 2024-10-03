@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable.jsx'
 import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -12,36 +13,25 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
   const [user, setUser] = useState(null)
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
+
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    blogService.getAll()
+      .then((blogs) => {
+        console.log(blogs)
+        setBlogs(blogs)
+      }
+      )
   }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
       blogService.setToken(user.token)
+      setUser(user)
     }
   }, [])
-
-  const handleTitleChange = (event) => {
-    setNewTitle(event.target.value)
-  }
-
-  const handleAuthorChange = (event) => {
-    setNewAuthor(event.target.value)
-  }
-
-  const handleUrlChange = (event) => {
-    setNewUrl(event.target.value)
-  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -77,22 +67,11 @@ const App = () => {
     setPassword('')
   }
 
-  const addBlog = (event) => {
-    event.preventDefault()
-    console.log('lisätään blogi')
-    const blogObject = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl
-    }
-    console.log(blogObject)
+  const addBlog = (blogObject) => {
     blogService
       .create(blogObject)
       .then(response => {
         setBlogs(blogs.concat(response))
-        setNewTitle('')
-        setNewAuthor('')
-        setNewUrl('')
         setSuccessMessage(`A new blog '${response.title}' by ${response.author} added`)
         setTimeout(() => {
           setSuccessMessage(null)
@@ -101,6 +80,33 @@ const App = () => {
       .catch(response => {
         setErrorMessage('tapahtui virhe')
       })
+  }
+
+  const addLike = (blogObject) => {
+    blogObject.likes++
+    blogService
+      .update(blogObject.id, blogObject)
+      .then(response => {
+        response.user = blogObject.user
+        setBlogs(blogs.map(blog => blog.id !== blogObject.id ? blog : response))
+      })
+      .catch(response => {
+        setErrorMessage('tapahtui virhe')
+      })
+  }
+
+  const removeBlog = (blog) => {
+    if (confirm(`Remove ${blog.name} by ${blog.author}?`)) {
+      const id = blog.id
+      blogService
+      .remove(id)
+      .then(response => {
+        setBlogs(blogs.filter(b => b.id !== id))
+      })
+      .catch(response => {
+        setErrorMessage('Poistossa tapahtui virhe.')
+      })
+    }
   }
 
   if (user === null) {
@@ -145,18 +151,16 @@ const App = () => {
           logout
         </button>
       </p>
-      <BlogForm
-        createFunction={addBlog}
-        newTitle={newTitle}
-        titleHandler={handleTitleChange}
-        newAuthor={newAuthor}
-        authorHandler={handleAuthorChange}
-        newUrl={newUrl}
-        urlHandler={handleUrlChange}
-      />
+      <Togglable buttonLabel="new blog">
+        <BlogForm
+          createblog={addBlog}
+        />
+      </Togglable>
+
       <h2>Blogs</h2>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+      {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
+        <Blog key={blog.id} blog={blog} like={addLike} removeBlog={removeBlog} user={user}
+        />
       )}
     </div>
   )
