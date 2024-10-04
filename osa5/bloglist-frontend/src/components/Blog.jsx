@@ -15,8 +15,6 @@ const Blog = ({ blog, like, removeBlog, user }) => {
     marginBottom: 5
   }
 
-  console.log(user)
-
   if (showFull) {
     return (
       <div style={blogStyle}>

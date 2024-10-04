@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable.jsx'
 import BlogForm from './components/BlogForm'
+import LoginForm from './components/LoginForm.jsx'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -18,7 +19,6 @@ const App = () => {
   useEffect(() => {
     blogService.getAll()
       .then((blogs) => {
-        console.log(blogs)
         setBlogs(blogs)
       }
       )
@@ -99,13 +99,13 @@ const App = () => {
     if (confirm(`Remove ${blog.name} by ${blog.author}?`)) {
       const id = blog.id
       blogService
-      .remove(id)
-      .then(response => {
-        setBlogs(blogs.filter(b => b.id !== id))
-      })
-      .catch(response => {
-        setErrorMessage('Poistossa tapahtui virhe.')
-      })
+        .remove(id)
+        .then(response => {
+          setBlogs(blogs.filter(b => b.id !== id))
+        })
+        .catch(response => {
+          setErrorMessage('Poistossa tapahtui virhe.')
+        })
     }
   }
 
@@ -114,32 +114,14 @@ const App = () => {
       <div>
         <Notification message={errorMessage} success={false} />
         <Notification message={successMessage} success={true} />
-        <h2>Log in to application</h2>
-        <div>
-          <h2>Login</h2>
-          <form onSubmit={handleLogin}>
-            <div>
-              username
-              <input
-                type="text"
-                value={username}
-                name="Username"
-                onChange={({ target }) => setUsername(target.value)}
-              />
-            </div>
-            <div>
-              password
-              <input
-                type="password"
-                value={password}
-                name="Password"
-                onChange={({ target }) => setPassword(target.value)}
-              />
-            </div>
-            <button type="submit">login</button>
-          </form>
-        </div>
-      </div>)
+        <LoginForm
+          username={username}
+          password={password}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+          handleLogin={handleLogin}
+        />
+      </div >)
   }
 
   return (
