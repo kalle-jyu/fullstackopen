@@ -122,6 +122,11 @@ const App = () => {
           handlePasswordChange={({ target }) => setPassword(target.value)}
           handleLogin={handleLogin}
         />
+        <h2>Blogs</h2>
+        {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
+          <Blog key={blog.id} blog={blog} like={addLike} removeBlog={removeBlog} user={user}
+          />
+        )}
       </div >)
   }
 

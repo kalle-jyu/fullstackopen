@@ -18,17 +18,17 @@ const Blog = ({ blog, like, removeBlog, user }) => {
   if (showFull) {
     return (
       <div style={blogStyle}>
-        {blog.title} {blog.author} <button onClick={toggleViev}>hide</button><br />
-        {blog.url}<br />
-        likes {blog.likes}<button onClick={() => { like(blog) }}>like</button><br />
-        {blog.user.name}<br />
-        <button style={{ display: blog.user.toString() === user.id.toString()? 'none' : '' }} onClick={() => { removeBlog(blog) }}>remove</button>
+        <span>{blog.title}</span> <span>{blog.author}</span> <button onClick={toggleViev}>hide</button><br />
+        <span>{blog.url}</span><br />
+        <span>likes {blog.likes}</span><button onClick={() => { like(blog) }}>like</button><br />
+        <span>{blog.user.name}</span><br />
+        <button style={{ display: user && blog.user.toString() === user.id.toString()? 'none' : '' }} onClick={() => { removeBlog(blog) }}>remove</button>
       </div>
     )
   } else {
     return (
       <div>
-        {blog.title} {blog.author}
+        <span>{blog.title}</span> <span>{blog.author}</span>
         <button onClick={toggleViev}>show</button>
       </div>
     )
