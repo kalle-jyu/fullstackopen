@@ -5,6 +5,10 @@ require('express-async-errors')
 const cors = require('cors')
 const middleware = require('./utils/middleware')
 const blogsRouter = require('./controllers/blogs')
+if (process.env.NODE_ENV === 'test') {
+  const testingRouter = require('./controllers/testing')
+  app.use('/api/testing', testingRouter)
+}
 const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
 const logger = require('./utils/logger')

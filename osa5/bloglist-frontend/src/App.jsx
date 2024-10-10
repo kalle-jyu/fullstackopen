@@ -97,7 +97,7 @@ const App = () => {
   }
 
   const removeBlog = (blog) => {
-    if (confirm(`Remove ${blog.name} by ${blog.author}?`)) {
+    if (confirm(`Remove ${blog.title} by ${blog.author}?`)) {
       const id = blog.id
       blogService
         .remove(id)
@@ -127,6 +127,7 @@ const App = () => {
           <Blog key={blog.id} blog={blog} like={addLike} removeBlog={removeBlog} user={user}
           />
         )}
+        <p>Blog app, Department of Computer Science, University of Helsinki 2024</p>
       </div >)
   }
 
@@ -150,6 +151,7 @@ const App = () => {
         <Blog key={blog.id} blog={blog} like={addLike} removeBlog={removeBlog} user={user}
         />
       )}
+      <p>Blog app, Department of Computer Science, University of Helsinki 2024</p>
     </div>
   )
 }
